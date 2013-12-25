@@ -1,0 +1,26 @@
+extends layout2
+block content
+
+ .container
+    .row.clearfix
+        .col-md-12.column
+          .page-header
+            h1
+              | Boards
+              div
+                small My Friends' Boards
+            - if(results.length==0)
+                 p
+                   | YoUr friends have no boards to display
+            -  else
+          .list-group
+            a.list-group-item.active(href='#') My Friends' Boards
+            -for (var inx = 0; inx < results.length; inx++) 
+             .list-group-item
+              a(href='/friendsPhoto'+'?boardName=#{results[inx].NAME}&nextPage=1') #{results[inx].NAME}
+              
+            a.list-group-item.active
+              span.badge #{results.length}
+              | Total Boards
+              
+

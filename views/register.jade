@@ -1,0 +1,40 @@
+extends signinLayout
+block content
+ .container
+    .row.clearfix
+        .col-md-12.column
+          .page-header
+            h1
+              | Registration
+              div
+                small Please fill out the form below
+          if fail == true 
+            .alert.alert-warning  Sorry, The userName  already exists, please try again
+          form.form-horizontal(role='form',action='/registerUser', method ='post')
+            .form-group
+              label.col-sm-1.control-label(for='inputUsername') Username
+              .col-sm-10
+                input#inputUsername.form-control(type='text' ,name='userID')
+            .form-group
+              label.col-sm-1.control-label(for='inputPassword3') Password
+              .col-sm-10
+                input#inputPassword3.form-control(type='password', name='password')
+            .form-group
+              label.col-sm-1.control-label(for='inputFirstName') First Name
+              .col-sm-10
+                input#inputFirstName.form-control(type='text',name='surname')
+            .form-group
+              label.col-sm-1.control-label(for='inputLastName') Last Name
+              .col-sm-10
+                input#inputLastName.form-control(type='text',name='givenname')     
+            .form-group
+              label.col-sm-1.control-label(for='inputEmail') Email Address
+              .col-sm-10
+                input#inputEmail.form-control(type='email',name='email')
+            .form-group
+              label.col-sm-1.control-label(for='inputAffiliation') Affiliation
+              .col-sm-10
+                input#inputAffiliation.form-control(type='text',name='affiliation')
+            .form-group
+              .col-sm-offset-2.col-sm-10
+                button.btn.btn-default(type='submit') Register 

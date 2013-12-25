@@ -1,0 +1,38 @@
+extends layout2
+block content
+
+ .container
+    if success == true 
+       .alert.alert-warning Successfully Add your new Board!
+    if fail == true 
+       .alert.alert-warning Failed to add Board, name already exists!
+       
+    .row.clearfix
+        .col-md-12.column
+          .page-header
+            h1
+              | Boards
+              div
+                small My Boards
+         
+             form(method='get',action='/add_empty_board')
+               input(name='NewBoardName',type='text',placeholder='Enter BoardName')
+               input(type='submit',name='submit',value='ADD BOARD!')  
+               
+            - if(results.length==0)
+                 p
+                   | You have no boards to display
+            -  else
+          .list-group
+            a.list-group-item.active(href='#') My Boards
+            -for (var inx = 0; inx < results.length; inx++) 
+             .list-group-item
+              a(href='/photos'+'?boardName=#{results[inx].NAME}&nextPage=1') #{results[inx].NAME}
+                 
+               
+            a.list-group-item.active
+              span.badge #{results.length}
+              | Total Boards
+              
+
+

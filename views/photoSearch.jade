@@ -1,0 +1,135 @@
+extends layout2
+block content
+    -  var current_page = PageNum;
+    -  var inx = 0;
+    -  var page_nation_length = 5;
+    -  var page_section = 0;
+    -  var n_photos_p_page = 5;
+    -  var n_pages = Math.ceil(results.length/n_photos_p_page);
+    
+    .container.wawaContainer
+        
+      .row.clearfix
+        .col-md-12.column
+          .page-header
+            h1
+            - if(results.length>0)
+              | You might be interested in these results,#{results.length} Objects, you are on #{current_page}page.
+            - else
+              | Sorry, we cannot find photos mathing your given tag "#{searchTags}" for Page#{PageNum}
+          
+                  
+              #modal-container-196153.modal.fade(method='get', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                      .modal-dialog
+                         .modal-content
+        .row.clearfix
+        .col-md-4             
+            -for (inx = (current_page -1) * n_photos_p_page; inx < (current_page -1) * n_photos_p_page + n_photos_p_page; inx++){
+              div.wawa
+               -if( inx <= results.length-1 ){
+                 
+                 -if (results[inx].ISCACHED == 'T' && results[inx].TYPE == 'photo'){
+                   - imageName = results[inx].ID + results[inx].SOURCE + results[inx].URL.charAt(results[inx].URL.length-3) + results[inx].URL.charAt(results[inx].URL.length-2) +results[inx].URL.charAt(results[inx].URL.length-1);
+                   img(alt='Failed to load', src="/mongoimages/#{imageName}") 
+                   .caption
+                   h3
+                    | This is a GridFS Item : #{imageName}                 
+                   p
+                    | Tags : #{results[inx].TAGS}
+                 -}
+                 -else if (results[inx].TYPE == 'photo'){
+                   img(alt='Failed to load', src="#{results[inx].URL}" ,width='300px')
+                   .caption
+                   h3                    
+                    a(href='#{results[inx].URL}', target="_black") Object ID: #{results[inx].ID}
+                   p
+                    | Tags : #{results[inx].TAGS}                  
+                 -}
+                 -else{
+                   .caption
+                   h3
+                    | Object ID is: #{results[inx].ID}
+                   p
+                    | Object type is : #{results[inx].TYPE}
+                   p
+                    a(href='#{results[inx].URL}', target="_black") #{results[inx].URL}
+                    
+                 -}
+                 
+                 - var currentObjIDvalue= results[inx].ID
+                 - var currentSrcIDvalue= results[inx].SOURCE
+                      .modal-body
+                       form(method='get',action='/add_rating')
+                          input(name='score',type='text',placeholder='Rate from 0 to 5')
+                          input(type='hidden', name='currentObjID', value=currentObjIDvalue)
+                          input(type='hidden', name='currentSrcID', value=currentSrcIDvalue)
+                          button.btn.btn-primary(type='submit') Rate it!
+                               
+                  p
+                   
+                    .modal-body
+                     form(method='get',action='/pin_it')
+                        input(type='hidden', name='currentObjID', value=currentObjIDvalue)
+                        input(type='hidden', name='currentSrcID', value=currentSrcIDvalue)
+                        button.btn.btn-primary(type='submit') Pin it!
+        
+                    #modal-container-196153.modal.fade(role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+                      .modal-dialog
+                         .modal-content
+                            .modal-header
+                                 button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+                                 h4#myModalLabel.modal-title
+                                   | Modal title
+                            .modal-body
+                               p Board1
+                               p Board2
+                               p Board2
+                            .modal-footer
+                               button.btn.btn-default(type='button', data-dismiss='modal') Close
+                               button.btn.btn-primary(type='button') Pin It
+                    -}
+              -} 
+              
+              
+         -if (current_page > 1)
+            - n_prev = parseInt(current_page) - 1;              
+         -else           
+            - n_prev = parseInt(current_page)
+         
+         -if (current_page == n_pages)
+            - n_next = parseInt(current_page);
+         -else
+            - n_next = parseInt(current_page) + 1;
+         
+         - page_section = Math.ceil(current_page / page_nation_length);      
+           
+       .row.clearfix
+         
+          ul.pagination
+          
+            li
+              a(href='/photoSearch'+'?searchTags=#{searchTags}&PageNum=1') First         
+            li
+              a(href='/photoSearch'+'?searchTags=#{searchTags}&PageNum=#{n_prev}') Prev            	            
+              -for (inx = parseInt(page_section); inx < parseInt(page_section) + page_nation_length; inx++){
+               -if(inx > n_pages){
+                  -break;
+               -}
+               -if(inx == current_page){
+                li
+                  a(style="color:green",href='/photoSearch'+'?searchTags=#{searchTags}&PageNum=#{inx}') #{inx}
+               -}
+               -else{
+                li
+                  a(href='/photoSearch'+'?searchTags=#{searchTags}&PageNum=#{inx}') #{inx}
+               -}	
+              -}
+            
+            li
+              a(href='/photoSearch'+'?searchTags=#{searchTags}&PageNum=#{n_next}') Next
+            li
+              a(href='/photoSearch'+'?searchTags=#{searchTags}&PageNum=#{n_pages}') Last
+              
+          
+           
+                 

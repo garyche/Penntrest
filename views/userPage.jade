@@ -1,0 +1,126 @@
+extends layout2
+
+block content
+    .container
+      .row.clearfix
+        .col-md-12.column
+          .page-header
+            h1
+              div
+                large
+                  span  HI #{userID}                  
+              div
+                small Some information about the user
+              -if(userID == 'adminuser'){
+                  p
+                  a.btn.btn-primary.btn-lg.active(href='/adminMongo',role='button') Check and Cache Photos
+              -}
+          .row.clearfix
+            .col-md-2.column
+              img.img-circle(alt='Failed to Load', src='http://lorempixel.com/140/140/',align='center')
+              br
+              br
+              br
+              a.btn.btn-primary.btn-sm.active(href='/editUserPage', role='button') Edit User Info
+              |<p></p>
+              a.btn.btn-primary.btn-sm.active(href='/interest', role='button') Edit Interest
+              |<p></p>
+              a.btn.btn-primary.btn-sm.active(href='/changePassword', role='button') Change Password
+              |<p></p>
+              a.btn.btn-primary.btn-sm.active(href='/friend', role='button') Add Friend
+              
+            .col-md-4
+
+              h3 
+                 | Your User Information:
+              dl
+                dt
+                  | Login
+                dd=results[0].LOGIN+" "
+                dt
+                  | Email
+                dd=results[0].EMAIL+" "
+                dt
+                  | Affiliations
+                affiliation = results[0].AFFILIATION+" "
+                dd
+                  | #{affiliation}
+                dt
+                  |Birthday:
+                dd=results[0].BIRTHDAY+" "
+                dt
+                  |Given Name
+                dd=results[0].GIVENNAME+" "
+                dt
+                  |Sur Name
+                dd=results[0].SURNAME+" "
+                
+            .col-md-1
+            .col-md-4
+              h3 
+                 | Your Interest: 
+              ol 
+              -for (var inx = 0; inx < interest.length; inx++){
+                -if (inx <=10)
+                
+                  li=interest[inx].INTEREST+" "
+                -}
+       
+         
+          .row.clearfix
+       .hr
+       .container.wawaContainer
+        .col-md-12.column
+          .page-header
+            h1
+              | #{msg} 
+
+          .row            
+            .col-md-6
+             -for (inx = 0; inx < 3; inx++){
+              div.wawa  
+               -if( inx <= recommendationResults.length-1 ){
+                 -if (recommendationResults[inx].ISCACHED == 'T'){
+                   - imageName = recommendationResults[inx].ID + recommendationResults[inx].SOURCE + recommendationResults[inx].URL.charAt(recommendationResults[inx].URL.length-3) + recommendationResults[inx].URL.charAt(recommendationResults[inx].URL.length-2) +recommendationResults[inx].URL.charAt(recommendationResults[inx].URL.length-1);
+                   img(alt='Failed to load', src="/mongoimages/#{imageName}", width='400px') 
+                   .caption
+                   h3
+                    | This is a GridFS Item : #{imageName}                  
+                   p
+                    | Tags : #{recommendationResults[inx].TAGS}
+                 -}
+                 -else{
+                   img(alt='Failed to load', src="#{recommendationResults[inx].URL}", width='400px')
+                   .caption
+                   h3                    
+                    a(href='#{recommendationResults[inx].URL}', target="_black") Object ID: #{recommendationResults[inx].ID}
+                   p
+                    | Tags : #{recommendationResults[inx].TAGS}
+                 -}
+                  
+                 
+                 - var currentObjIDvalue= recommendationResults[inx].ID
+                 - var currentSrcIDvalue= recommendationResults[inx].SOURCE
+                      .modal-body
+                       form(method='get',action='/add_rating')
+                          input(name='score',type='text',placeholder='integer value from 0 to 5')
+                          input(type='hidden', name='currentObjID', value=currentObjIDvalue)
+                          input(type='hidden', name='currentSrcID', value=currentSrcIDvalue)
+                          button.btn.btn-primary(type='submit') Rate it!
+                               
+                  p
+                   
+                    .modal-body
+                     form(method='get',action='/pin_it')
+                        input(type='hidden', name='currentObjID', value=currentObjIDvalue)
+                        input(type='hidden', name='currentSrcID', value=currentSrcIDvalue)
+                        button.btn.btn-primary(type='submit') Pin it!
+               -}
+              -}
+              
+          
+          .row
+           p
+            a.btn.btn-primary.btn-lg.active(href='/recommendation',role='button') View More Recommendations
+ 
+          

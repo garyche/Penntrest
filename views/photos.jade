@@ -1,0 +1,138 @@
+extends layout2
+block content
+    -  var current_page = nextPage;
+    -  var inx = 0;
+    -  var page_nation_length = 5;
+    -  var page_section = 0;
+    -  var n_photos_p_page = 9;
+    -  var n_pages = Math.ceil(results.length/n_photos_p_page);
+    -  var imageName={};
+    -  var pic_count=1;
+     
+    if deleted == true 
+       .alert.alert-warning Successfully removed chosen photo!
+    if deleted == false 
+       .alert.alert-warning Failed to remove chosen photo!
+       
+    .container
+     
+      .row.clearfix
+        .col-12.column
+          .page-header
+            h1
+              | Board Name : #{boardName}
+            h3
+              | #{results.length} Objects
+        .row.clearfix
+          .col-md-12
+           -for (inx =((current_page -1) *  n_photos_p_page); inx < ((current_page -1) * n_photos_p_page )+ n_photos_p_page; inx +=3){
+         
+            -if (pic_count == 1 || pic_count == 4 || pic_count == 7){
+             .row
+             
+            -}
+              - for ( var i = 0; i <3; i++, pic_count++){
+              .col-md-4             
+               div.wawa
+                -if( inx+i <= results.length-1 ){
+                 -if (results[inx+i].ISCACHED == 'T' && results[inx+i].TYPE=='photo'){
+                   - imageName = results[inx+i].OBJECTID + results[inx+i].SOURCEID + results[inx+i].URL.charAt(results[inx+i].URL.length-3) + results[inx+i].URL.charAt(results[inx+i].URL.length-2) +results[inx+i].URL.charAt(results[inx+i].URL.length-1);
+                   img(alt='Failed to load', src="/mongoimages/#{imageName}", width='200px')
+                   .caption
+                  h3
+                    | This is a GridFS Item : #{imageName}
+                  p
+                    | Tags : #{results[inx+i].TAGS}
+                 -}
+                 -else if(results[inx+i].TYPE == 'photo'){
+                   img(alt='Failed to load', src="#{results[inx+i].URL}", width='200px')
+                   .caption                  
+                  h3                    
+                    a(href='#{results[inx+i].URL}', target="_black") Object ID: #{results[inx+i].OBJECTID}
+                   p
+                    | Tags : #{results[inx+i].TAGS}
+                 -}
+                 -else{
+                  .caption
+                  h3
+                    | Object ID is : #{results[inx+i].OBJECTID}
+                  p
+                    | Object type is : #{results[inx+i].TYPE}
+                  p
+                    -var link = results[inx+i].URL
+                  p Object URL is : #{results[inx+i].URL}
+                  a( href=link, target="_black") Click here to Open
+                 -}
+                  p
+                 - var currentObjIDvalue= results[inx+i].OBJECTID
+                 - var currentSrcIDvalue= results[inx+i].SOURCEID
+                 - var currentBoardName= boardName
+                  p
+                       form(method='get',action='/add_rating')
+                          input(name='score',type='text',placeholder='integer value from 0 to 5')
+                          input(type='hidden', name='currentObjID', value=currentObjIDvalue)
+                          input(type='hidden', name='currentSrcID', value=currentSrcIDvalue)
+                          button.btn.btn-primary(type='submit') Rate it!
+                          
+    
+                       form(method='get',action='/pin_it')
+                         input(type='hidden', name='currentObjID', value=currentObjIDvalue)
+                         input(type='hidden', name='currentSrcID', value=currentSrcIDvalue)
+                         input(type='hidden', name='cur_board', value=currentBoardName)
+                         input(type='hidden', name='curr_page', value=current_page)
+                         button.btn.btn-primary(type='submit') Pin it!
+                         
+                         button.btn.btn-primary(type='button', onclick="JavaScript:this.form.action='/removePhoto';this.form.submit()") Remove it!
+                        
+                         
+                           
+               -}               
+              -}
+             -}
+
+      .row.clearfix
+         -if (canPin) {
+             form(method='get',action='/add_new_photo')
+               input(name='url',type='text',placeholder='url of photo you want to pin')
+                 
+               input(type='hidden', name='currentBoard', value=boardName)
+               button.btn.btn-primary(type='submit') Pin New Photo!   
+         -} 
+           
+         -if (current_page > 1)
+            - n_prev = parseInt(current_page) - 1;              
+         -else           
+            - n_prev = parseInt(current_page)
+         
+         -if (current_page == n_pages)
+            - n_next = parseInt(current_page);
+         -else
+            - n_next = parseInt(current_page) + 1;
+         
+         - page_section = Math.ceil(current_page / page_nation_length);
+         
+          ul.pagination
+            
+            li
+              a(href='/photos'+'?boardName=#{boardName}&nextPage=1') First         
+            li
+              a(href='/photos'+'?boardName=#{boardName}&nextPage=#{n_prev}') Prev            	            
+              -for (inx = parseInt(page_section); inx < parseInt(page_section) + page_nation_length; inx++){
+               -if(inx > n_pages){
+                  -break;
+               -}
+               -if(inx == current_page){
+                li
+                  a(style="color:green",href='/photos'+'?boardName=#{boardName}&nextPage=#{inx}') #{inx}
+               -}
+               -else{
+                li
+                  a(href='/photos'+'?boardName=#{boardName}&nextPage=#{inx}') #{inx}
+               -}	
+              -}
+            
+            li
+              a(href='/photos'+'?boardName=#{boardName}&nextPage=#{n_next}') Next
+            li
+              a(href='/photos'+'?boardName=#{boardName}&nextPage=#{n_pages}') Last
+                            

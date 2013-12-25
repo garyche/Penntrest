@@ -1,0 +1,49 @@
+extends layout
+
+block content
+  .container
+    if loggedOut == true 
+       .alert.alert-warning Successfully logged out, thanks for using our website!
+    .row.clearfix
+        .col-md-12.column
+          #carousel-599484.carousel.slide
+            ol.carousel-indicators
+              li.active(data-slide-to='0', data-target='#carousel-599484')
+              li(data-slide-to='1', data-target='#carousel-599484')
+              li(data-slide-to='2', data-target='#carousel-599484')
+            .carousel-inner
+              .item.active
+                img( alt='Failed to load', src="http://lorempixel.com/1600/500/sports/2" )
+                .carousel-caption
+                  h4
+                    | SPORTS
+              .item
+                img(alt='Failed to load', src="http://lorempixel.com/1600/500/sports/1" )
+                .carousel-caption
+                  h4
+                    | SPORTS
+              .item
+                img(alt='Failed to load', src="http://lorempixel.com/1600/500/sports/3" )
+                .carousel-caption
+                  h4
+                    | SPORTS
+
+            a.left.carousel-control(href='#carousel-599484', data-slide='prev')
+              span.glyphicon.glyphicon-chevron-left
+            a.right.carousel-control(href='#carousel-599484', data-slide='next')
+              span.glyphicon.glyphicon-chevron-right
+      .row.clearfix
+        .col-md-6.column
+          p
+           
+          p
+            strong We are group of WAWA
+          p
+            strong Try our PENNTEREST today! 
+          p
+            em
+              |  Pin and rate your photos, explore a new world here! 
+            | Invite your friends now!
+          p
+            small
+              |  class project for CIS 550 
